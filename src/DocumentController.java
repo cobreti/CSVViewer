@@ -24,14 +24,20 @@ public class DocumentController implements ActionListener {
 	
 	protected void OnChooseFile() {
 		
-		JFileChooser fc = new JFileChooser(m_CurrentFile);
+		File	f = null;
+		
+		if ( m_Document != null )
+			f = m_Document.getFile();
+		
+		JFileChooser fc = new JFileChooser(f);
 		
 		int returnVal = fc.showOpenDialog(null);
 		
 		if ( returnVal == JFileChooser.APPROVE_OPTION ) {
-			m_CurrentFile = fc.getSelectedFile();
+			File file = fc.getSelectedFile();
 		
-			m_DocNavPanel.getFile().setText( m_CurrentFile.getPath() );
+			m_DocNavPanel.getFile().setText( file.getPath() );
+			m_Document = new Document(fc.getSelectedFile());
 		}
 	}
 	
@@ -39,5 +45,5 @@ public class DocumentController implements ActionListener {
 	private JPanel m_NavPanel;
 	private JPanel m_DetailsPanel;
 	private DocNavPanel m_DocNavPanel;
-	private File m_CurrentFile;
+	private Document m_Document;
 }

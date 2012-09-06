@@ -1,9 +1,5 @@
-import java.awt.GraphicsConfiguration;
-import javax.swing.JSplitPane;
-import java.awt.HeadlessException;
-
-import javax.swing.JFrame;
-
+import java.awt.*;
+import javax.swing.*;
 
 public class MainFrame extends JFrame {
 
@@ -39,8 +35,11 @@ public class MainFrame extends JFrame {
 		m_Controllers = new DocumentController[2];
 		m_Controllers[0] = new DocumentController(m_NavigationPanel, m_DetailsPanel);
 		
-		pack();
+		getContentPane().setSize( new Dimension(1280, 800) );
+		setSize( new Dimension(1280, 800) );
 		
+		m_NavigationPanel.setSize( new Dimension(880, 800) );
+		m_SectionsSplitter.setDividerLocation(880);
 	}
 	
 	

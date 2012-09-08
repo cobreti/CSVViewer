@@ -7,10 +7,17 @@ public class Document {
 	public Document(File file) {
 		m_file = file;
 		
-		ReadFileContent();
+		if ( m_file != null )
+		{
+			ReadFileContent();
+		}
 	}
 	
 	public File getFile() { return m_file; }
+	
+	public DocLine getFirstLine() { return m_FirstLine; }
+	
+	public int getLinesCount() { return m_linesCount; }
 	
 	protected void ReadFileContent() {
 		

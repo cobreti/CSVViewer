@@ -13,7 +13,11 @@ public class DocumentController implements ActionListener {
 		
 		m_NavPanel.setLayout( new BorderLayout() );
 		m_NavPanel.add( m_DocNavPanel, BorderLayout.CENTER );
+		
+		m_Document = new Document(null);
 	}
+	
+	public Document getDocument() { return m_Document; }
 
 	public void actionPerformed(ActionEvent ae) {
 		
@@ -38,6 +42,7 @@ public class DocumentController implements ActionListener {
 		
 			m_DocNavPanel.getFile().setText( file.getPath() );
 			m_Document = new Document(fc.getSelectedFile());
+			m_DocNavPanel.updateContent();
 		}
 	}
 	

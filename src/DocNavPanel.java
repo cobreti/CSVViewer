@@ -27,13 +27,28 @@ public class DocNavPanel extends JPanel {
 	public JTextField getFile() {
 		return m_File;
 	}
+	
+	public void updateContent() {
+		
+		Document doc = m_Controller.getDocument();
+		int linesCount = doc.getLinesCount();
+		
+		m_ContentVertScrollBar.setMaximum(linesCount);
+		
+		m_View.updateUI();
+	}
 
 	protected void Init() {
 		
 		setLayout( new BorderLayout() );
 		
 		m_File = new JTextField();
-		m_Content = new JTextField();
+		m_Content = new JPanel();
+		m_ContentVertScrollBar = new JScrollBar(JScrollBar.VERTICAL, 0, 0, 0, 0);
+		m_View = new DocViewPanel(m_Controller);
+		m_Content.setLayout( new BorderLayout() );
+		m_Content.add( m_ContentVertScrollBar, BorderLayout.EAST );
+		m_Content.add( m_View, BorderLayout.CENTER );
 		m_btnBrowseFile = new JButton("...");
 		m_btnBrowseFile.setActionCommand("BrowseFile");
 		m_btnBrowseFile.addActionListener(m_Controller);
@@ -48,7 +63,9 @@ public class DocNavPanel extends JPanel {
 	}
 	
 	private JTextField		m_File;
-	private JTextField		m_Content;
+	private JPanel			m_Content;
+	private DocViewPanel	m_View;
+	private JScrollBar		m_ContentVertScrollBar;
 	private JButton			m_btnBrowseFile;
 	private JPanel			m_PathPanel;
 	private DocumentController m_Controller;

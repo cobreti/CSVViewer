@@ -1,3 +1,5 @@
+package org;
+
 import java.awt.*;
 import javax.swing.*;
 
@@ -25,15 +27,21 @@ public class MainFrame extends JFrame {
 	protected void Init() {
 		
 		m_NavigationPanel = new NavigationPanel();
+		m_NavigationPanel2 = new NavigationPanel();
 		m_DetailsPanel = new DetailsPanel();
 		
+		m_NavigationSplitter = new JSplitPane(JSplitPane.VERTICAL_SPLIT,
+												m_NavigationPanel,
+												m_NavigationPanel2 );
+		
 		m_SectionsSplitter = new JSplitPane(JSplitPane.HORIZONTAL_SPLIT,
-											m_NavigationPanel,
+											m_NavigationSplitter,
 											m_DetailsPanel );
 		this.setContentPane(m_SectionsSplitter);
 		
 		m_Controllers = new DocumentController[2];
 		m_Controllers[0] = new DocumentController(m_NavigationPanel, m_DetailsPanel);
+		m_Controllers[1] = new DocumentController(m_NavigationPanel2, m_DetailsPanel);
 		
 		getContentPane().setSize( new Dimension(1280, 800) );
 		setSize( new Dimension(1280, 800) );
@@ -43,8 +51,10 @@ public class MainFrame extends JFrame {
 	}
 	
 	
-	private JSplitPane m_SectionsSplitter;
-	private NavigationPanel m_NavigationPanel;
-	private DetailsPanel m_DetailsPanel;
-	private DocumentController[] m_Controllers;
+	private JSplitPane 				m_SectionsSplitter;
+	private JSplitPane				m_NavigationSplitter;
+	private NavigationPanel 		m_NavigationPanel;
+	private NavigationPanel			m_NavigationPanel2;
+	private DetailsPanel 			m_DetailsPanel;
+	private DocumentController[] 	m_Controllers;
 }

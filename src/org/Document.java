@@ -1,3 +1,5 @@
+package org;
+
 import java.awt.*;
 import java.io.*;
 import java.util.zip.*;
@@ -58,7 +60,7 @@ public class Document {
 			
 			return (m_line != null);
 		}
-		
+				
 		protected Iterator(Document owner) {
 			m_owner = owner;
 			m_line = m_owner.m_FirstLine;
@@ -84,6 +86,17 @@ public class Document {
 	public Iterator GetLinesIterator() { return new Iterator(this); }
 	
 	public int getLinesCount() { return m_linesCount; }
+	
+	public void close()
+	{
+		DocLine	line = m_FirstLine;
+		m_FirstLine = null;
+		
+		while ( line != null )
+		{
+			line = line.Disconnect();
+		}
+	}
 	
 	protected void ReadFileContent() {
 		
@@ -112,11 +125,18 @@ public class Document {
 			
 			m_FirstLine = null;
 			DocLine line = null;
+			DocLine	prevLine = null;
 			m_linesCount = 0;
 
 			while ( (textLine = br.readLine()) != null ) {
 				
-				line = new DocLine(textLine, line);
+//				line = new DocLine(textLine, line);
+				line = DocLinePool.getInstance().Alloc(textLine);
+				if ( prevLine != null )
+					prevLine.setNext(line);
+				line.setPrevious(prevLine);
+				prevLine = line;
+				
 				++ m_linesCount;
 				
 				if ( m_FirstLine == null )
@@ -128,15 +148,15 @@ public class Document {
 		}
 		
 		System.out.println("lines count : " + m_linesCount );
-		DocLine line = m_FirstLine;
+//		DocLine line = m_FirstLine;
 		
-		while ( line != null ) {
-			System.out.println("line : " + line.getText() );
-			line = line.getNext();
-		}
+//		while ( line != null ) {
+//			System.out.println("line : " + line.getText() );
+//			line = line.getNext();
+//		}
 	}
 	
-	private File	m_file;
+	private File	m_file = null;
 	private DocLine	m_FirstLine;
 	private int		m_linesCount = 0;
 }

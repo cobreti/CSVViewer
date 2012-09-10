@@ -1,3 +1,5 @@
+package org;
+
 
 import java.awt.*;
 import java.awt.event.*;
@@ -45,6 +47,9 @@ public class DocumentController implements ActionListener {
 		if ( returnVal == JFileChooser.APPROVE_OPTION ) {
 			File file = fc.getSelectedFile();
 		
+			m_DocNavPanel.OnDocumentClosing();
+			m_Document.close();
+
 			m_DocNavPanel.getFile().setText( file.getPath() );
 			m_Document = new Document(fc.getSelectedFile());
 			m_DocNavPanel.OnDocumentContentChanged();

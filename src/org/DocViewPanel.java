@@ -1,3 +1,5 @@
+package org;
+
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.*;
@@ -67,11 +69,16 @@ public class DocViewPanel 	extends JPanel
 			int				maxAscent = m_fontMetrics.getMaxAscent();
 			int				maxDescent = m_fontMetrics.getMaxDescent();
 			
+			if ( getLineText() == null )
+			{
+				return;
+			}
+			
 			Rectangle2D		bounds = m_graphics.getFont().getStringBounds(getLineText(), m_frc);
 			Rectangle		shape = new Rectangle(m_pos.x + (int)m_lineNumberMarginSize, (int)m_pos.y, 
 													(int)bounds.getWidth(), maxAscent + maxDescent );
 			
-			m_graphics2D.draw(shape);
+//			m_graphics2D.draw(shape);
 
 			m_graphics2D.drawString(getLineText(), m_pos.x + (int)m_lineNumberMarginSize, m_pos.y + maxAscent);
 		}
@@ -110,6 +117,13 @@ public class DocViewPanel 	extends JPanel
 		UpdateVisibleLinesCount();
 		
 		updateUI();
+	}
+	
+	public void OnDocumentClosing() {
+		
+		m_topLinePos = null;
+		m_selectedLine = -1;
+//		updateUI();
 	}
 	
 	public void paintComponent(Graphics g) {
@@ -227,8 +241,8 @@ public class DocViewPanel 	extends JPanel
 	protected DocumentController 	m_Controller;
 	protected int 					m_VisibleLinesCount = 1;
 	protected Document.Iterator		m_topLinePos;
-	protected Font					m_lineFont = new Font("Courier", Font.PLAIN, 10);
-	protected Font					m_selectedLineFont = new Font("Courier", Font.BOLD, 10);
-	protected Font					m_lineNoFont = new Font("Courier", Font.ITALIC, 10);
+	protected Font					m_lineFont = new Font("Courier", Font.PLAIN, 12);
+	protected Font					m_selectedLineFont = new Font("Courier", Font.BOLD, 12);
+	protected Font					m_lineNoFont = new Font("Courier", Font.ITALIC, 12);
 	protected int					m_selectedLine = -1;
 }

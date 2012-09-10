@@ -1,3 +1,5 @@
+package org;
+
 import java.awt.LayoutManager;
 
 import javax.swing.JPanel;

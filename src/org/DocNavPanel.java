@@ -1,3 +1,5 @@
+package org;
+
 import java.awt.BorderLayout;
 import java.awt.LayoutManager;
 import javax.swing.*;
@@ -41,6 +43,13 @@ public class DocNavPanel extends JPanel
 		m_ContentVertScrollBar.setMaximum(linesCount);
 		
 		m_View.OnDocumentContentChanged();
+	}
+	
+	public void OnDocumentClosing() {
+		m_ContentVertScrollBar.setValue(0);
+		m_ContentVertScrollBar.setMaximum(0);
+		
+		m_View.OnDocumentClosing();
 	}
 	
 	public void OnVisibleLinesCountChanged(int visibleLinesCount) {

@@ -1,11 +1,15 @@
 import java.awt.BorderLayout;
 import java.awt.LayoutManager;
 import javax.swing.*;
+import java.awt.*;
+import java.awt.event.*;
 
-public class DocNavPanel extends JPanel {
+public class DocNavPanel extends JPanel
+							implements AdjustmentListener, ComponentListener {
 
 	public DocNavPanel(DocumentController controller) {
 		m_Controller = controller;
+		addComponentListener(this);
 		Init();
 	}
 
@@ -28,14 +32,46 @@ public class DocNavPanel extends JPanel {
 		return m_File;
 	}
 	
-	public void updateContent() {
+	public void OnDocumentContentChanged() {
 		
 		Document doc = m_Controller.getDocument();
 		int linesCount = doc.getLinesCount();
 		
+		m_ContentVertScrollBar.setValue(0);
 		m_ContentVertScrollBar.setMaximum(linesCount);
 		
-		m_View.updateUI();
+		m_View.OnDocumentContentChanged();
+	}
+	
+	public void OnVisibleLinesCountChanged(int visibleLinesCount) {
+		
+		Document doc = m_Controller.getDocument();
+		int linesCount = doc.getLinesCount();
+		
+		int maxValue = linesCount - visibleLinesCount + 1;
+		if ( maxValue < 0 )
+			maxValue = 0;
+		
+		m_ContentVertScrollBar.setMaximum(linesCount - visibleLinesCount);
+	}
+	
+	public void adjustmentValueChanged(AdjustmentEvent e) {
+		System.out.println( "ID : " + e.getID() + " - value : " + e.getValue() );
+	}
+	
+	public void componentHidden(ComponentEvent e) {
+		
+	}
+	
+	public void componentMoved(ComponentEvent e) {
+		
+	}
+	
+	public void componentResized(ComponentEvent e) {
+	}
+	
+	public void componentShown(ComponentEvent e) {
+		
 	}
 
 	protected void Init() {
@@ -45,7 +81,10 @@ public class DocNavPanel extends JPanel {
 		m_File = new JTextField();
 		m_Content = new JPanel();
 		m_ContentVertScrollBar = new JScrollBar(JScrollBar.VERTICAL, 0, 0, 0, 0);
+		
 		m_View = new DocViewPanel(m_Controller);
+		m_ContentVertScrollBar.addAdjustmentListener(m_View);
+		
 		m_Content.setLayout( new BorderLayout() );
 		m_Content.add( m_ContentVertScrollBar, BorderLayout.EAST );
 		m_Content.add( m_View, BorderLayout.CENTER );

@@ -25,6 +25,11 @@ public class DocumentController implements ActionListener {
 			OnChooseFile();
 	}
 	
+	public void OnVisibleLinesCountChanged(int visibleLinesCount)
+	{
+		m_DocNavPanel.OnVisibleLinesCountChanged(visibleLinesCount);
+	}
+	
 	
 	protected void OnChooseFile() {
 		
@@ -42,7 +47,7 @@ public class DocumentController implements ActionListener {
 		
 			m_DocNavPanel.getFile().setText( file.getPath() );
 			m_Document = new Document(fc.getSelectedFile());
-			m_DocNavPanel.updateContent();
+			m_DocNavPanel.OnDocumentContentChanged();
 		}
 	}
 	

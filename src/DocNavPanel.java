@@ -52,7 +52,7 @@ public class DocNavPanel extends JPanel
 		if ( maxValue < 0 )
 			maxValue = 0;
 		
-		m_ContentVertScrollBar.setMaximum(linesCount - visibleLinesCount);
+		m_ContentVertScrollBar.setMaximum(maxValue);
 	}
 	
 	public void adjustmentValueChanged(AdjustmentEvent e) {

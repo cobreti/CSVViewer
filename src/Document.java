@@ -1,6 +1,6 @@
-
 import java.awt.*;
 import java.io.*;
+import java.util.zip.*;
 
 public class Document {
 
@@ -13,7 +13,7 @@ public class Document {
 		}
 		
 		public boolean isValid() { return m_line != null; }
-		
+				
 		public String getLineText() {
 			
 			if ( m_line != null )
@@ -80,9 +80,7 @@ public class Document {
 	}
 	
 	public File getFile() { return m_file; }
-	
-//	public DocLine getFirstLine() { return m_FirstLine; }
-	
+		
 	public Iterator GetLinesIterator() { return new Iterator(this); }
 	
 	public int getLinesCount() { return m_linesCount; }
@@ -90,7 +88,12 @@ public class Document {
 	protected void ReadFileContent() {
 		
 		try {
-			FileReader reader = new FileReader(m_file);
+			InputStreamReader reader;
+			
+			if ( m_file.getName().endsWith(".gz") )
+				reader = new InputStreamReader(new GZIPInputStream(new FileInputStream(m_file)));
+			else
+				reader = new FileReader(m_file);
 			
 			ReadContent(reader);
 			

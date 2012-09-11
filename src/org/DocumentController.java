@@ -58,6 +58,7 @@ public class DocumentController implements ActionListener {
 
 			m_DocNavPanel.getFile().setText( file.getPath() );
 			m_Document = new Document(fc.getSelectedFile());
+			m_Document.ReadContent(1);
 			m_DocNavPanel.OnDocumentContentChanged();
 		}
 	}

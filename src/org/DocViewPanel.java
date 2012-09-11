@@ -124,11 +124,11 @@ public class DocViewPanel 	extends JPanel
 			m_graphics2D.setClip(clipRect);
 		}
 		
-		public void DisplayLineNo()
+		public void DisplayLineNo(int offset)
 		{
 			int				maxAscent = m_fontMetrics.getMaxAscent();
 
-			m_graphics2D.drawString(Integer.toString(getLineNo()+1), m_pos.x, m_pos.y + maxAscent );			
+			m_graphics2D.drawString(Integer.toString(getLineNo()+offset+1), m_pos.x, m_pos.y + maxAscent );			
 		}
 		
 		private Graphics					m_graphics;
@@ -185,11 +185,13 @@ public class DocViewPanel 	extends JPanel
 																				new Rectangle(0, 0, size.width, size.height),
 																				new Point(0,0),
 																				m_horzOffset );
+		ContentWindow				window = doc.getWindow();
+		
 		
 		while ( displayIterator.isValid() ) {
 			
 			g.setFont(m_lineNoFont);
-			displayIterator.DisplayLineNo();
+			displayIterator.DisplayLineNo(window.getStartLine());
 			
 			if ( m_selectedLine == displayIterator.getLineNo() )
 				g.setFont(m_selectedLineFont);

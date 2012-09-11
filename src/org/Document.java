@@ -77,7 +77,8 @@ public class Document {
 		
 		if ( m_file != null )
 		{
-			ReadFileContent();
+			m_fileContent = new FileContent(file);
+//			ReadFileContent();
 		}
 	}
 	
@@ -85,9 +86,30 @@ public class Document {
 		
 	public Iterator GetLinesIterator() { return new Iterator(this); }
 	
-	public int getLinesCount() { return m_linesCount; }
+	public int getLinesCount() {
+		
+		if ( m_currentWindow == null )
+			return 0;
+		
+		return m_currentWindow.getEndLine() - m_currentWindow.getStartLine(); 
+	}
+	public int getWindowsCount()		{ return m_fileContent.getWindowsCount(); }
+	public ContentWindow getWindow()	{ return m_currentWindow; }
 	
 	public void close()
+	{
+		ReleaseLines();
+	}
+	
+	public void ReadContent(int windowIndex)
+	{
+		ReleaseLines();
+		
+		m_currentWindow = m_fileContent.getWindow(windowIndex);
+		m_FirstLine = m_fileContent.getContent(windowIndex);
+	}
+	
+	protected void ReleaseLines()
 	{
 		DocLine	line = m_FirstLine;
 		m_FirstLine = null;
@@ -98,71 +120,9 @@ public class Document {
 		}
 	}
 	
-	protected void ReadFileContent() {
-		
-		try {
-			InputStreamReader reader;
-			
-			if ( m_file.getName().endsWith(".gz") )
-				reader = new InputStreamReader(new GZIPInputStream(new FileInputStream(m_file)));
-			else
-				reader = new FileReader(m_file);
-			
-			ReadContent(reader);
-			
-			reader.close();
-		}
-		catch (Exception ex) {
-		}
-	}
 	
-	protected void ReadContent( InputStreamReader in ) {
-		
-		BufferedReader br = new BufferedReader(in);
-		String textLine;
-		
-		try {
-			
-			m_FirstLine = null;
-			DocLine line = null;
-			DocLine	prevLine = null;
-			m_linesCount = 0;
-
-			long startMilli = System.currentTimeMillis();
-			
-			while ( (textLine = br.readLine()) != null ) {
-				
-				line = DocLinePool.getInstance().Alloc(textLine);
-				if ( prevLine != null )
-					prevLine.setNext(line);
-				line.setPrevious(prevLine);
-				prevLine = line;
-				
-				++ m_linesCount;
-				
-				if ( m_FirstLine == null )
-					m_FirstLine = line;
-			}
-
-			long endMilli = System.currentTimeMillis();
-
-			System.out.println("lines count : " + m_linesCount );
-			System.out.println("parsing time : " + (endMilli - startMilli) );
-		
-		}
-		catch (Exception ex) {
-			
-		}
-		
-//		DocLine line = m_FirstLine;
-		
-//		while ( line != null ) {
-//			System.out.println("line : " + line.getText() );
-//			line = line.getNext();
-//		}
-	}
-	
-	private File	m_file = null;
-	private DocLine	m_FirstLine;
-	private int		m_linesCount = 0;
+	private File			m_file = null;
+	private DocLine			m_FirstLine;
+	private FileContent		m_fileContent;
+	private ContentWindow	m_currentWindow;
 }

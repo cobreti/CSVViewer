@@ -15,20 +15,20 @@ public class DocNavPanel extends JPanel
 		Init();
 	}
 
-	public DocNavPanel(LayoutManager arg0) {
-		super(arg0);
-		// TODO Auto-generated constructor stub
-	}
-
-	public DocNavPanel(boolean arg0) {
-		super(arg0);
-		// TODO Auto-generated constructor stub
-	}
-
-	public DocNavPanel(LayoutManager arg0, boolean arg1) {
-		super(arg0, arg1);
-		// TODO Auto-generated constructor stub
-	}
+//	public DocNavPanel(LayoutManager arg0) {
+//		super(arg0);
+//		// TODO Auto-generated constructor stub
+//	}
+//
+//	public DocNavPanel(boolean arg0) {
+//		super(arg0);
+//		// TODO Auto-generated constructor stub
+//	}
+//
+//	public DocNavPanel(LayoutManager arg0, boolean arg1) {
+//		super(arg0, arg1);
+//		// TODO Auto-generated constructor stub
+//	}
 	
 	public JTextField getFile() {
 		return m_File;
@@ -64,6 +64,12 @@ public class DocNavPanel extends JPanel
 		m_ContentVertScrollBar.setMaximum(maxValue);
 	}
 	
+	public void OnMaxLineWidthUpdate(int maxWidth)
+	{
+		if ( maxWidth > m_ContentHorzScrollBar.getMaximum() )
+			m_ContentHorzScrollBar.setMaximum(maxWidth);
+	}
+	
 	public void adjustmentValueChanged(AdjustmentEvent e) {
 		System.out.println( "ID : " + e.getID() + " - value : " + e.getValue() );
 	}
@@ -90,12 +96,15 @@ public class DocNavPanel extends JPanel
 		m_File = new JTextField();
 		m_Content = new JPanel();
 		m_ContentVertScrollBar = new JScrollBar(JScrollBar.VERTICAL, 0, 0, 0, 0);
+		m_ContentHorzScrollBar = new JScrollBar(JScrollBar.HORIZONTAL, 0, 0, 0, 0);
 		
 		m_View = new DocViewPanel(m_Controller);
-		m_ContentVertScrollBar.addAdjustmentListener(m_View);
+		m_ContentVertScrollBar.addAdjustmentListener( m_View.new VertScrollbarListener(m_View) );
+		m_ContentHorzScrollBar.addAdjustmentListener( m_View.new HorzScrollbarListener(m_View) );
 		
 		m_Content.setLayout( new BorderLayout() );
 		m_Content.add( m_ContentVertScrollBar, BorderLayout.EAST );
+		m_Content.add( m_ContentHorzScrollBar, BorderLayout.SOUTH );
 		m_Content.add( m_View, BorderLayout.CENTER );
 		m_btnBrowseFile = new JButton("...");
 		m_btnBrowseFile.setActionCommand("BrowseFile");
@@ -114,6 +123,7 @@ public class DocNavPanel extends JPanel
 	private JPanel			m_Content;
 	private DocViewPanel	m_View;
 	private JScrollBar		m_ContentVertScrollBar;
+	private JScrollBar		m_ContentHorzScrollBar;
 	private JButton			m_btnBrowseFile;
 	private JPanel			m_PathPanel;
 	private DocumentController m_Controller;

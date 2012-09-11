@@ -10,13 +10,47 @@ import java.awt.geom.*;
 public class DocViewPanel 	extends JPanel
 							implements AdjustmentListener, MouseListener, ComponentListener {
 	
+	public class VertScrollbarListener implements AdjustmentListener {
+		
+		public VertScrollbarListener(DocViewPanel view) {
+			m_view = view;
+		}
+		
+		public void adjustmentValueChanged(AdjustmentEvent e) {
+			
+			if ( m_view.m_topLinePos != null )
+			{
+				m_view.m_topLinePos.gotoLineNo(e.getValue());
+				m_view.updateUI();
+			}
+		}
+
+		private DocViewPanel m_view;
+	}
+	
+	public class HorzScrollbarListener implements AdjustmentListener {
+		
+		public HorzScrollbarListener(DocViewPanel view) {
+			m_view = view;
+		}
+		
+		public void adjustmentValueChanged(AdjustmentEvent e) {
+
+			m_view.m_horzOffset = -e.getValue();
+			m_view.updateUI();
+		}
+
+		private DocViewPanel m_view;
+	}
+
 	protected class LineDisplayIterator extends Document.Iterator
 	{
 		public LineDisplayIterator(	Graphics g, 
 									Document doc, 
 									Document.Iterator pos,
 									Rectangle viewRect,
-									Point startPos ) {
+									Point startPos,
+									int horzOffset ) {
 			doc.super(pos);
 			
 			m_graphics = g;
@@ -25,6 +59,7 @@ public class DocViewPanel 	extends JPanel
 			m_viewRect = viewRect;
 			m_pos = startPos;
 			m_fontMetrics = m_graphics2D.getFontMetrics();
+			m_horzOffset = horzOffset;
 			
 			Rectangle2D bounds = m_graphics2D.getFont().getStringBounds("00000000", m_frc);
 			m_lineNumberMarginSize = bounds.getWidth() + 5;
@@ -41,7 +76,6 @@ public class DocViewPanel 	extends JPanel
 			
 			int				maxAscent = m_fontMetrics.getMaxAscent();
 			int				maxDescent = m_fontMetrics.getMaxDescent();
-			Rectangle2D		bounds = m_graphics.getFont().getStringBounds(getLineText(), m_frc);
 			m_pos.y += maxAscent + maxDescent;
 			
 			return super.gotoNext();
@@ -64,6 +98,8 @@ public class DocViewPanel 	extends JPanel
 			return shape.contains(pt);
 		}
 		
+		public double getMaxWidth() { return m_MaxLineWidth; }
+		
 		public void DisplayLine()
 		{
 			int				maxAscent = m_fontMetrics.getMaxAscent();
@@ -75,12 +111,17 @@ public class DocViewPanel 	extends JPanel
 			}
 			
 			Rectangle2D		bounds = m_graphics.getFont().getStringBounds(getLineText(), m_frc);
-			Rectangle		shape = new Rectangle(m_pos.x + (int)m_lineNumberMarginSize, (int)m_pos.y, 
-													(int)bounds.getWidth(), maxAscent + maxDescent );
 			
-//			m_graphics2D.draw(shape);
+			if ( bounds.getWidth() > m_MaxLineWidth )
+				m_MaxLineWidth = bounds.getWidth();
 
-			m_graphics2D.drawString(getLineText(), m_pos.x + (int)m_lineNumberMarginSize, m_pos.y + maxAscent);
+			Rectangle clipRect = m_graphics2D.getClipBounds();
+			m_graphics2D.clipRect(	(int)(m_pos.x + m_lineNumberMarginSize), m_pos.y, 
+									(int)bounds.getWidth(), maxAscent + maxDescent);
+			m_graphics2D.drawString(	getLineText(), 
+										m_pos.x + (int)m_lineNumberMarginSize + m_horzOffset, 
+										m_pos.y + maxAscent );
+			m_graphics2D.setClip(clipRect);
 		}
 		
 		public void DisplayLineNo()
@@ -97,6 +138,8 @@ public class DocViewPanel 	extends JPanel
 		private Point						m_pos;
 		private FontMetrics					m_fontMetrics;
 		private double						m_lineNumberMarginSize;
+		private double						m_MaxLineWidth = 0;
+		private int							m_horzOffset;
 	}
 	
 	
@@ -140,7 +183,8 @@ public class DocViewPanel 	extends JPanel
 																				doc, 
 																				m_topLinePos,
 																				new Rectangle(0, 0, size.width, size.height),
-																				new Point(0,0) );
+																				new Point(0,0),
+																				m_horzOffset );
 		
 		while ( displayIterator.isValid() ) {
 			
@@ -155,17 +199,10 @@ public class DocViewPanel 	extends JPanel
 
 			displayIterator.gotoNext();
 		}
+		
+		m_Controller.OnMaxLineWidthUpdate((int)displayIterator.getMaxWidth());
 	}
 
-	public void adjustmentValueChanged(AdjustmentEvent e) {
-		
-		if ( m_topLinePos != null )
-		{
-			m_topLinePos.gotoLineNo(e.getValue());
-			updateUI();
-		}
-	}
-	
 	public void mouseClicked(MouseEvent e) {
 		
 	}
@@ -187,7 +224,8 @@ public class DocViewPanel 	extends JPanel
 																				m_Controller.getDocument(), 
 																				m_topLinePos,
 																				new Rectangle(0, 0, getSize().width, getSize().height),
-																				new Point(5,0) );
+																				new Point(5,0),
+																				m_horzOffset );
 		
 		m_selectedLine = -1;
 		
@@ -245,4 +283,10 @@ public class DocViewPanel 	extends JPanel
 	protected Font					m_selectedLineFont = new Font("Courier", Font.BOLD, 12);
 	protected Font					m_lineNoFont = new Font("Courier", Font.ITALIC, 12);
 	protected int					m_selectedLine = -1;
+	protected int					m_horzOffset = 0;
+	@Override
+	public void adjustmentValueChanged(AdjustmentEvent arg0) {
+		// TODO Auto-generated method stub
+		
+	}
 }

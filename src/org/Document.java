@@ -128,9 +128,10 @@ public class Document {
 			DocLine	prevLine = null;
 			m_linesCount = 0;
 
+			long startMilli = System.currentTimeMillis();
+			
 			while ( (textLine = br.readLine()) != null ) {
 				
-//				line = new DocLine(textLine, line);
 				line = DocLinePool.getInstance().Alloc(textLine);
 				if ( prevLine != null )
 					prevLine.setNext(line);
@@ -142,12 +143,17 @@ public class Document {
 				if ( m_FirstLine == null )
 					m_FirstLine = line;
 			}
+
+			long endMilli = System.currentTimeMillis();
+
+			System.out.println("lines count : " + m_linesCount );
+			System.out.println("parsing time : " + (endMilli - startMilli) );
+		
 		}
 		catch (Exception ex) {
 			
 		}
 		
-		System.out.println("lines count : " + m_linesCount );
 //		DocLine line = m_FirstLine;
 		
 //		while ( line != null ) {

@@ -34,6 +34,10 @@ public class DocumentController implements ActionListener {
 		m_DocNavPanel.OnVisibleLinesCountChanged(visibleLinesCount);
 	}
 	
+	public void OnMaxLineWidthUpdate(int maxWidth) {
+		m_DocNavPanel.OnMaxLineWidthUpdate(maxWidth);
+	}
+	
 	
 	protected void OnChooseFile() {
 		

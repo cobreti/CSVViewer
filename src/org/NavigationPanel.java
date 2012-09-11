@@ -7,21 +7,24 @@ import java.awt.*;
 public class NavigationPanel extends JPanel {
 
 	public NavigationPanel() {
+		
+		m_sections = new JPanel[2];
+		m_sections[0] = new JPanel();
+		m_sections[1] = new JPanel();
+
+		setLayout( new BorderLayout() );
+		
+		m_splitter = new JSplitPane(	JSplitPane.VERTICAL_SPLIT,
+										m_sections[0],
+										m_sections[1] );
+		
+		add(m_splitter, BorderLayout.CENTER);
 	}
 
-	public NavigationPanel(LayoutManager arg0) {
-		super(arg0);
-		// TODO Auto-generated constructor stub
-	}
 
-	public NavigationPanel(boolean arg0) {
-		super(arg0);
-		// TODO Auto-generated constructor stub
-	}
+	public JPanel getSectionPanel(int index) { return m_sections[index]; }
+	
 
-	public NavigationPanel(LayoutManager arg0, boolean arg1) {
-		super(arg0, arg1);
-		// TODO Auto-generated constructor stub
-	}
-
+	private JSplitPane		m_splitter;
+	private JPanel[]		m_sections;
 }

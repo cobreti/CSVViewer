@@ -8,9 +8,11 @@ import java.io.*;
 
 public class DocumentController implements ActionListener {
 
-	public DocumentController(JPanel NavPanel, JPanel DetailsPanel) {
-		m_NavPanel = NavPanel;
-		m_DetailsPanel = DetailsPanel;
+	public DocumentController(int index, NavigationPanel NavPanel, DetailsPanel DetailsPanel) {
+		
+		m_index = index;
+		m_NavPanel = NavPanel.getSectionPanel(m_index);
+		m_DetailsPanel = DetailsPanel.getSectionPanel(m_index);
 		m_DocNavPanel = new DocNavPanel(this);
 		
 		m_NavPanel.setLayout( new BorderLayout() );
@@ -57,8 +59,9 @@ public class DocumentController implements ActionListener {
 	}
 	
 	
-	private JPanel m_NavPanel;
-	private JPanel m_DetailsPanel;
-	private DocNavPanel m_DocNavPanel;
-	private Document m_Document;
+	private JPanel 			m_NavPanel;
+	private JPanel 			m_DetailsPanel;
+	private DocNavPanel 	m_DocNavPanel;
+	private Document 		m_Document;
+	private int				m_index;
 }

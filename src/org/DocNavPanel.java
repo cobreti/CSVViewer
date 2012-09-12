@@ -14,21 +14,6 @@ public class DocNavPanel extends JPanel
 		addComponentListener(this);
 		Init();
 	}
-
-//	public DocNavPanel(LayoutManager arg0) {
-//		super(arg0);
-//		// TODO Auto-generated constructor stub
-//	}
-//
-//	public DocNavPanel(boolean arg0) {
-//		super(arg0);
-//		// TODO Auto-generated constructor stub
-//	}
-//
-//	public DocNavPanel(LayoutManager arg0, boolean arg1) {
-//		super(arg0, arg1);
-//		// TODO Auto-generated constructor stub
-//	}
 	
 	public JTextField getFile() {
 		return m_File;
@@ -39,10 +24,19 @@ public class DocNavPanel extends JPanel
 		Document doc = m_Controller.getDocument();
 		int linesCount = doc.getLinesCount();
 		
+		
+		
 		m_ContentVertScrollBar.setValue(0);
 		m_ContentVertScrollBar.setMaximum(linesCount);
 		
 		m_View.OnDocumentContentChanged();
+	}
+	
+	public void OnNewDocument()
+	{
+		m_windowSelectionPanel.OnNewDocument(m_Controller.getDocument());
+		
+		OnDocumentContentChanged();
 	}
 	
 	public void OnDocumentClosing() {
@@ -114,17 +108,21 @@ public class DocNavPanel extends JPanel
 		m_PathPanel.setLayout( new BorderLayout() );
 		m_PathPanel.add(m_File, BorderLayout.CENTER);
 		m_PathPanel.add(m_btnBrowseFile, BorderLayout.LINE_END);
+
+		m_windowSelectionPanel = new ContentWindowSelectionPanel(m_Controller);
 		
 		add(m_PathPanel, BorderLayout.PAGE_START);
 		add(m_Content, BorderLayout.CENTER);
+		add(m_windowSelectionPanel, BorderLayout.WEST);
 	}
 	
-	private JTextField		m_File;
-	private JPanel			m_Content;
-	private DocViewPanel	m_View;
-	private JScrollBar		m_ContentVertScrollBar;
-	private JScrollBar		m_ContentHorzScrollBar;
-	private JButton			m_btnBrowseFile;
-	private JPanel			m_PathPanel;
-	private DocumentController m_Controller;
+	private JTextField						m_File;
+	private JPanel							m_Content;
+	private DocViewPanel					m_View;
+	private ContentWindowSelectionPanel		m_windowSelectionPanel;
+	private JScrollBar						m_ContentVertScrollBar;
+	private JScrollBar						m_ContentHorzScrollBar;
+	private JButton							m_btnBrowseFile;
+	private JPanel							m_PathPanel;
+	private DocumentController 				m_Controller;
 }

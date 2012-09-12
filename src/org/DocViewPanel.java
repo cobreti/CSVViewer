@@ -62,7 +62,7 @@ public class DocViewPanel 	extends JPanel
 			m_horzOffset = horzOffset;
 			
 			Rectangle2D bounds = m_graphics2D.getFont().getStringBounds("00000000", m_frc);
-			m_lineNumberMarginSize = bounds.getWidth() + 5;
+			m_lineNumberMarginSize = bounds.getWidth() + 10;
 		}
 		
 		public boolean isValid() {
@@ -128,7 +128,7 @@ public class DocViewPanel 	extends JPanel
 		{
 			int				maxAscent = m_fontMetrics.getMaxAscent();
 
-			m_graphics2D.drawString(Integer.toString(getLineNo()+offset+1), m_pos.x, m_pos.y + maxAscent );			
+			m_graphics2D.drawString(Integer.toString(getLineNo()+offset+1), m_pos.x + 5, m_pos.y + maxAscent );			
 		}
 		
 		private Graphics					m_graphics;

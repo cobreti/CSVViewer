@@ -100,7 +100,7 @@ public class FileContent {
 	
 	protected void CreatedNeededWindows()
 	{
-		int		kWindowSize 	= 200000;
+		int		kWindowSize 	= 100000;
 		int		windowsCount 	= m_linesCount / kWindowSize;
 		int		lineStart		= 0;
 		int		lineEnd			= 0;

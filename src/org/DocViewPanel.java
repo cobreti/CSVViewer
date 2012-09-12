@@ -124,6 +124,40 @@ public class DocViewPanel 	extends JPanel
 			m_graphics2D.setClip(clipRect);
 		}
 		
+		public void Highlight( ElementPos pos ) {
+			
+			int				maxAscent = m_fontMetrics.getMaxAscent();
+			int				maxDescent = m_fontMetrics.getMaxDescent();
+			String			text = pos.getLinePos().getLineText();
+			String			prefix = text.substring(0, pos.getStart());
+			String			element = text.substring(pos.getStart(), pos.getStart() + pos.getLength());
+			int				left = 0;
+			
+			if ( prefix != null )
+			{
+				Rectangle2D		bounds = m_graphics.getFont().getStringBounds(prefix, m_frc);
+				left = (int)bounds.getWidth();
+			}
+			
+			Rectangle2D bounds = m_graphics.getFont().getStringBounds(element, m_frc);
+
+			Rectangle clipRect = m_graphics2D.getClipBounds();
+			m_graphics2D.clipRect(	(int)(m_pos.x + m_lineNumberMarginSize), m_pos.y, 
+									clipRect.width, maxAscent + maxDescent);
+
+			Rectangle	rcElement = new Rectangle();
+			rcElement.setBounds(	m_pos.x + (int)m_lineNumberMarginSize + m_horzOffset + left,
+									m_pos.y,
+									(int)bounds.getWidth(),
+									maxAscent + maxDescent );
+			Color backupColor = m_graphics2D.getColor();
+			m_graphics2D.setColor(Color.YELLOW);
+			m_graphics2D.fill(rcElement);
+			m_graphics2D.setColor(backupColor);
+			
+			m_graphics2D.setClip(clipRect);
+		}
+		
 		public void DisplayLineNo(int offset)
 		{
 			int				maxAscent = m_fontMetrics.getMaxAscent();
@@ -160,6 +194,8 @@ public class DocViewPanel 	extends JPanel
 		
 		UpdateVisibleLinesCount();
 		
+//		doc.Search("GiveUp");
+		
 		updateUI();
 	}
 	
@@ -187,7 +223,7 @@ public class DocViewPanel 	extends JPanel
 																				new Point(0,0),
 																				m_horzOffset );
 		ContentWindow				window = doc.getWindow();
-		
+		ElementPos					foundElement = doc.getFoundElement();
 		
 		while ( displayIterator.isValid() ) {
 			
@@ -196,6 +232,12 @@ public class DocViewPanel 	extends JPanel
 			else
 				g.setFont(m_lineNoFont);
 			displayIterator.DisplayLineNo(window.getStartLine());
+			
+			if ( 	foundElement != null && 
+					displayIterator.getLineNo() == foundElement.getLinePos().getLineNo() )
+			{
+				displayIterator.Highlight(foundElement);
+			}
 			
 			if ( m_selectedLine == displayIterator.getLineNo() )
 				g.setFont(m_selectedLineFont);

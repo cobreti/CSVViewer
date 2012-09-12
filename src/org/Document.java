@@ -96,6 +96,8 @@ public class Document {
 	public int getWindowsCount()		{ return m_fileContent.getWindowsCount(); }
 	public ContentWindow getWindow()	{ return m_currentWindow; }
 	
+	public ElementPos getFoundElement()	{ return m_foundElement; }
+	
 	public void close()
 	{
 		ReleaseLines();
@@ -107,6 +109,28 @@ public class Document {
 		
 		m_currentWindow = m_fileContent.getWindow(windowIndex);
 		m_FirstLine = m_fileContent.getContent(windowIndex);
+	}
+	
+	public boolean Search(String text) {
+		m_foundElement = Find(text);
+		return m_foundElement != null;
+	}
+	
+	protected ElementPos Find( String text ) {
+		
+		Iterator	pos = new Iterator(this);
+		ElementPos	foundPos = null;
+		
+		while ( foundPos == null && pos.isValid() )
+		{
+			int index = pos.getLineText().indexOf(text);
+			if ( index >= 0 )
+				foundPos = new ElementPos(pos, index, text.length());
+			else
+				pos.gotoNext();
+		}
+		
+		return foundPos;
 	}
 	
 	protected void ReleaseLines()
@@ -125,4 +149,5 @@ public class Document {
 	private DocLine			m_FirstLine;
 	private FileContent		m_fileContent;
 	private ContentWindow	m_currentWindow;
+	private ElementPos		m_foundElement = null;
 }

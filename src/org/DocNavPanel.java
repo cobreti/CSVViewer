@@ -50,12 +50,27 @@ public class DocNavPanel extends JPanel
 		
 		Document doc = m_Controller.getDocument();
 		int linesCount = doc.getLinesCount();
+		m_visibleLinesCount = visibleLinesCount;
 		
 		int maxValue = linesCount - visibleLinesCount + 1;
 		if ( maxValue < 0 )
 			maxValue = 0;
 		
 		m_ContentVertScrollBar.setMaximum(maxValue);
+	}
+	
+	public void OnLineSelected(int index, String text) {
+		
+		int topPos = m_ContentVertScrollBar.getValue();
+		
+		if ( topPos > index )
+		{
+			m_ContentVertScrollBar.setValue(index);
+		}
+		else if ( topPos + m_visibleLinesCount < index )
+		{
+			m_ContentVertScrollBar.setValue(index - m_visibleLinesCount);
+		}
 	}
 	
 	public void OnMaxLineWidthUpdate(int maxWidth)
@@ -125,4 +140,5 @@ public class DocNavPanel extends JPanel
 	private JButton							m_btnBrowseFile;
 	private JPanel							m_PathPanel;
 	private DocumentController 				m_Controller;
+	private int								m_visibleLinesCount;
 }

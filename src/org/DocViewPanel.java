@@ -8,7 +8,7 @@ import java.awt.geom.*;
 
 
 public class DocViewPanel 	extends JPanel
-							implements AdjustmentListener, MouseListener, ComponentListener {
+							implements AdjustmentListener, MouseListener, ComponentListener, KeyListener {
 	
 	public class VertScrollbarListener implements AdjustmentListener {
 		
@@ -76,7 +76,7 @@ public class DocViewPanel 	extends JPanel
 			
 			int				maxAscent = m_fontMetrics.getMaxAscent();
 			int				maxDescent = m_fontMetrics.getMaxDescent();
-			m_pos.y += maxAscent + maxDescent;
+			m_pos.y += maxAscent + maxDescent + 5;
 			
 			return super.gotoNext();
 		}
@@ -149,6 +149,7 @@ public class DocViewPanel 	extends JPanel
 		
 		addMouseListener(this);
 		addComponentListener(this);
+		addKeyListener(this);
 	}
 	
 	public void OnDocumentContentChanged() {
@@ -253,12 +254,10 @@ public class DocViewPanel 	extends JPanel
 		{
 			m_selectedLine = selectedLine;
 			m_Controller.OnLineSelected(m_selectedLine, selectedLineText);
+			updateUI();
 		}
 		
-		System.out.println("SelectedLine : " + m_selectedLine );
-		System.out.println("");
-		
-		updateUI();
+		grabFocus();
 	}
 	
 	public void mouseReleased(MouseEvent e) {
@@ -278,6 +277,60 @@ public class DocViewPanel 	extends JPanel
 	}
 	
 	public void componentShown(ComponentEvent e) {
+		
+	}
+
+	@Override
+	public void adjustmentValueChanged(AdjustmentEvent arg0) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void keyPressed(KeyEvent e) {
+
+		Document doc = m_Controller.getDocument();
+		
+		switch (e.getKeyCode()){
+
+			case KeyEvent.VK_DOWN:{
+				
+				if ( m_selectedLine < doc.getLinesCount() )
+				{
+					++ m_selectedLine;
+					Document.Iterator pos = doc.new Iterator(m_topLinePos);
+					pos.gotoLineNo(m_selectedLine);
+					m_Controller.OnLineSelected(m_selectedLine, pos.getLineText());
+				}
+								
+				updateUI();
+			}
+			break;
+			
+			case KeyEvent.VK_UP:{
+				
+				if ( m_selectedLine > 0 )
+				{
+					-- m_selectedLine;
+					Document.Iterator pos = doc.new Iterator(m_topLinePos);
+					pos.gotoLineNo(m_selectedLine);
+					m_Controller.OnLineSelected(m_selectedLine, pos.getLineText());
+				}
+				
+				updateUI();
+			}
+		}
+	}
+
+	@Override
+	public void keyReleased(KeyEvent arg0) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void keyTyped(KeyEvent arg0) {
+		// TODO Auto-generated method stub
 		
 	}
 
@@ -301,9 +354,4 @@ public class DocViewPanel 	extends JPanel
 	protected Font					m_SelectedLineNoFont = new Font("Courier", Font.BOLD | Font.ITALIC, 12);
 	protected int					m_selectedLine = -1;
 	protected int					m_horzOffset = 0;
-	@Override
-	public void adjustmentValueChanged(AdjustmentEvent arg0) {
-		// TODO Auto-generated method stub
-		
-	}
 }

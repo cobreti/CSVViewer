@@ -46,6 +46,8 @@ public class DocumentController implements ActionListener {
 	
 	public void OnLineSelected(int index, String text) {
 		
+		m_DocNavPanel.OnLineSelected(index, text);
+		
 		String[]		split_line = text.split(";");
 		String[]		formated_text = new String[split_line.length];
 		

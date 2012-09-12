@@ -44,6 +44,8 @@ public class ContentWindowSelectionPanel extends JPanel {
 				AddButton(index);
 			}
 		}
+		
+		updateUI();
 	}
 	
 	protected void AddButton(int index) {

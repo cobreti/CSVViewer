@@ -190,7 +190,10 @@ public class DocViewPanel 	extends JPanel
 		
 		while ( displayIterator.isValid() ) {
 			
-			g.setFont(m_lineNoFont);
+			if ( m_selectedLine == displayIterator.getLineNo() )
+				g.setFont(m_SelectedLineNoFont);
+			else
+				g.setFont(m_lineNoFont);
 			displayIterator.DisplayLineNo(window.getStartLine());
 			
 			if ( m_selectedLine == displayIterator.getLineNo() )
@@ -228,17 +231,28 @@ public class DocViewPanel 	extends JPanel
 																				new Rectangle(0, 0, getSize().width, getSize().height),
 																				new Point(5,0),
 																				m_horzOffset );
+		int							selectedLine = -1;
+		String						selectedLineText = null;
 		
 		m_selectedLine = -1;
 		
 		System.out.println("");
 		
-		while ( displayIterator.isValid() && m_selectedLine == -1 )
+		while ( displayIterator.isValid() && selectedLine == -1 )
 		{
 			if ( displayIterator.isPointInLine(e.getPoint()) )
-				m_selectedLine = displayIterator.getLineNo();
+			{
+				selectedLine = displayIterator.getLineNo();
+				selectedLineText = displayIterator.getLineText();
+			}
 			
 			displayIterator.gotoNext();
+		}
+		
+		if ( m_selectedLine != selectedLine )
+		{
+			m_selectedLine = selectedLine;
+			m_Controller.OnLineSelected(m_selectedLine, selectedLineText);
 		}
 		
 		System.out.println("SelectedLine : " + m_selectedLine );
@@ -284,6 +298,7 @@ public class DocViewPanel 	extends JPanel
 	protected Font					m_lineFont = new Font("Courier", Font.PLAIN, 12);
 	protected Font					m_selectedLineFont = new Font("Courier", Font.BOLD, 12);
 	protected Font					m_lineNoFont = new Font("Courier", Font.ITALIC, 12);
+	protected Font					m_SelectedLineNoFont = new Font("Courier", Font.BOLD | Font.ITALIC, 12);
 	protected int					m_selectedLine = -1;
 	protected int					m_horzOffset = 0;
 	@Override

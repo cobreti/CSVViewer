@@ -44,6 +44,27 @@ public class DocumentController implements ActionListener {
 		m_DocNavPanel.OnDocumentContentChanged();
 	}
 	
+	public void OnLineSelected(int index, String text) {
+		
+		String[]		split_line = text.split(";");
+		String[]		formated_text = new String[split_line.length];
+		
+		for (int i = 0; i < split_line.length; ++i) {
+			formated_text[i] = String.format("%5s : %s", Integer.toString(i), split_line[i]);
+		}
+		
+		m_DetailsPanel.removeAll();
+		
+		JList	list = new JList(formated_text);
+		list.setSelectionMode(ListSelectionModel.MULTIPLE_INTERVAL_SELECTION);
+		list.setLayoutOrientation(JList.VERTICAL);
+		list.setVisibleRowCount(-1);
+		
+		JScrollPane		scroller = new JScrollPane(list);
+		m_DetailsPanel.add(scroller, BorderLayout.CENTER);
+		m_DetailsPanel.updateUI();
+	}
+	
 	protected void OnChooseFile() {
 		
 		File	f = null;

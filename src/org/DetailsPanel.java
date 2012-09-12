@@ -15,6 +15,9 @@ public class DetailsPanel extends JPanel {
 		m_sections[0] = new JPanel();
 		m_sections[1] = new JPanel();
 		
+		m_sections[0].setLayout( new BorderLayout() );
+		m_sections[1].setLayout( new BorderLayout() );
+		
 		setLayout( new BorderLayout() );
 		
 		m_splitter = new JSplitPane(	JSplitPane.HORIZONTAL_SPLIT,

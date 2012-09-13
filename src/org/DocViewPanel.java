@@ -128,7 +128,7 @@ public class DocViewPanel 	extends JPanel
 			
 			int				maxAscent = m_fontMetrics.getMaxAscent();
 			int				maxDescent = m_fontMetrics.getMaxDescent();
-			String			text = pos.getLinePos().getLineText();
+			String			text = getLineText();
 			String			prefix = text.substring(0, pos.getStart());
 			String			element = text.substring(pos.getStart(), pos.getStart() + pos.getLength());
 			int				left = 0;
@@ -223,7 +223,7 @@ public class DocViewPanel 	extends JPanel
 																				new Point(0,0),
 																				m_horzOffset );
 		ContentWindow				window = doc.getWindow();
-		ElementPos					foundElement = doc.getFoundElement();
+		ElementPos					foundElement = doc.getFoundElementPos();
 		
 		while ( displayIterator.isValid() ) {
 			
@@ -234,7 +234,7 @@ public class DocViewPanel 	extends JPanel
 			displayIterator.DisplayLineNo(window.getStartLine());
 			
 			if ( 	foundElement != null && 
-					displayIterator.getLineNo() == foundElement.getLinePos().getLineNo() )
+					displayIterator.getLineNo() == foundElement.getLineNo() )
 			{
 				displayIterator.Highlight(foundElement);
 			}
@@ -247,6 +247,8 @@ public class DocViewPanel 	extends JPanel
 
 			displayIterator.gotoNext();
 		}
+		
+		System.out.println("line maximum width : " + (int)displayIterator.getMaxWidth() );
 		
 		m_Controller.OnMaxLineWidthUpdate((int)displayIterator.getMaxWidth());
 	}
@@ -374,6 +376,20 @@ public class DocViewPanel 	extends JPanel
 	public void keyTyped(KeyEvent arg0) {
 		// TODO Auto-generated method stub
 		
+	}
+	
+	public Rectangle2D getTextBounds(String text, int startIndex) {
+		
+		Graphics			g = getGraphics();
+		FontMetrics			fm = g.getFontMetrics(m_lineFont);
+	
+		Rectangle2D			bounds = m_selectedLineFont.getStringBounds(text.substring(0, startIndex), fm.getFontRenderContext());
+		
+		return bounds;
+	}
+	
+	public void SetSelectedLine(int lineNo) {
+		m_selectedLine = lineNo;
 	}
 
 	protected void UpdateVisibleLinesCount() {

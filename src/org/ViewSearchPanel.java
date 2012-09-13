@@ -25,6 +25,7 @@ public class ViewSearchPanel extends JPanel {
 		
 		public void actionPerformed(ActionEvent e) {
 			
+			m_owner.m_controller.OnFindNext(m_owner.m_textField.getText());
 		}
 		
 		private ViewSearchPanel m_owner;
@@ -43,6 +44,7 @@ public class ViewSearchPanel extends JPanel {
 		
 		public void actionPerformed(ActionEvent e) {
 			
+			m_owner.m_controller.OnFindPrevious(m_owner.m_textField.getText());
 		}
 		
 		private ViewSearchPanel m_owner;

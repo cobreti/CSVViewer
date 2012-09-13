@@ -46,6 +46,7 @@ public class DocumentController implements ActionListener {
 	
 	public void OnLineSelected(int index, String text) {
 		
+		m_Document.OnLineSelected(index, text);
 		m_DocNavPanel.OnLineSelected(index, text);
 		
 		String[]		split_line = text.split(";");
@@ -67,6 +68,26 @@ public class DocumentController implements ActionListener {
 		m_DetailsPanel.updateUI();
 	}
 	
+	public void OnFindNext(String text)
+	{
+		if ( m_Document.SearchNext(text) )
+		{
+			m_DocNavPanel.EnsurePosVisible(	m_Document.getFoundElementPos().getLineNo(), 
+											m_Document.getFoundElementPos().getStart() );
+		}
+		m_DocNavPanel.updateUI();
+	}
+	
+	public void OnFindPrevious(String text)
+	{
+		if ( m_Document.SearchPrevious(text) )
+		{
+			m_DocNavPanel.EnsurePosVisible(	m_Document.getFoundElementPos().getLineNo(), 
+											m_Document.getFoundElementPos().getStart() );
+		}
+		m_DocNavPanel.updateUI();
+	}
+
 	protected void OnChooseFile() {
 		
 		File	f = null;

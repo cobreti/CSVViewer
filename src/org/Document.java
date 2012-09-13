@@ -96,7 +96,7 @@ public class Document {
 	public int getWindowsCount()		{ return m_fileContent.getWindowsCount(); }
 	public ContentWindow getWindow()	{ return m_currentWindow; }
 	
-	public ElementPos getFoundElement()	{ return m_foundElement; }
+	public ElementPos getFoundElementPos()	{ return m_foundElement; }
 	
 	public void close()
 	{
@@ -111,28 +111,86 @@ public class Document {
 		m_FirstLine = m_fileContent.getContent(windowIndex);
 	}
 	
-	public boolean Search(String text) {
-		m_foundElement = Find(text);
+	public boolean SearchNext(String text) {
+		m_foundElement = FindNext(m_searchStartPos, text);
+		
+		if ( m_foundElement != null )
+		{
+			m_searchStartPos.setLineNo(m_foundElement.getLineNo());
+			m_searchStartPos.setStart(m_foundElement.getStart()+1);
+		}
+		
 		return m_foundElement != null;
 	}
 	
-	protected ElementPos Find( String text ) {
+	public boolean SearchPrevious(String text) {
+		m_foundElement = FindPrevious(m_searchStartPos, text);
+		
+		if ( m_foundElement != null )
+		{
+			m_searchStartPos.setLineNo(m_foundElement.getLineNo());
+			m_searchStartPos.setStart(m_foundElement.getStart()+1);
+		}
+		
+		return m_foundElement != null;
+	}
+
+	public void OnLineSelected(int lineNo, String text) {
+		m_foundElement = null;
+		m_searchStartPos.setLineNo(lineNo);
+		m_searchStartPos.setStart(0);
+	}
+	
+	protected ElementPos FindNext( ElementPos startPos, String text ) {
 		
 		Iterator	pos = new Iterator(this);
 		ElementPos	foundPos = null;
+		int			startIndex = startPos.getStart();
+		
+		pos.gotoLineNo(startPos.getLineNo());
 		
 		while ( foundPos == null && pos.isValid() )
 		{
-			int index = pos.getLineText().indexOf(text);
+			String line_text = pos.getLineText().substring(startIndex);
+			int index = line_text.indexOf(text);
 			if ( index >= 0 )
-				foundPos = new ElementPos(pos, index, text.length());
+				foundPos = new ElementPos(pos.getLineNo(), index + startIndex, text.length());
 			else
+			{
 				pos.gotoNext();
+				startIndex = 0;
+			}
 		}
 		
 		return foundPos;
 	}
 	
+	protected ElementPos FindPrevious( ElementPos startPos, String text ) {
+		
+		Iterator	pos = new Iterator(this);
+		ElementPos	foundPos = null;
+		int			startIndex = startPos.getStart();
+		
+		pos.gotoLineNo(startPos.getLineNo());
+		
+		while ( foundPos == null && pos.isValid() )
+		{
+			String line_text = pos.getLineText().substring(0, startIndex);
+			int index = line_text.indexOf(text);
+			if ( index >= 0 )
+				foundPos = new ElementPos(pos.getLineNo(), index, text.length());
+			else
+			{
+				pos.gotoPrevious();
+				
+				if ( pos.isValid() )
+					startIndex = pos.getLineText().length();
+			}
+		}
+		
+		return foundPos;
+	}
+
 	protected void ReleaseLines()
 	{
 		DocLine	line = m_FirstLine;
@@ -150,4 +208,5 @@ public class Document {
 	private FileContent		m_fileContent;
 	private ContentWindow	m_currentWindow;
 	private ElementPos		m_foundElement = null;
+	private ElementPos		m_searchStartPos = new ElementPos(0, 0, 0);
 }

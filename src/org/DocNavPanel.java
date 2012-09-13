@@ -3,8 +3,12 @@ package org;
 import java.awt.BorderLayout;
 import java.awt.LayoutManager;
 import javax.swing.*;
+
+import org.Document.Iterator;
+
 import java.awt.*;
 import java.awt.event.*;
+import java.awt.geom.Rectangle2D;
 
 public class DocNavPanel extends JPanel
 							implements AdjustmentListener, ComponentListener {
@@ -96,6 +100,29 @@ public class DocNavPanel extends JPanel
 	
 	public void componentShown(ComponentEvent e) {
 		
+	}
+	
+	public void EnsurePosVisible(int lineNo, int startIndex) {
+		int topLineNo = lineNo - (m_visibleLinesCount / 2);
+		Document			doc = m_controller.getDocument();
+		Document.Iterator	linePos = doc.GetLinesIterator();
+
+		linePos.gotoLineNo(lineNo);
+		
+		Rectangle2D			bounds = m_View.getTextBounds(linePos.getLineText(), startIndex);
+		int					horzOffset = (int)bounds.getWidth() - m_View.getSize().width / 3;
+		
+		if ( horzOffset < 0 )
+			horzOffset = 0;
+		
+		if ( topLineNo < 0 )
+			topLineNo = 0;
+		
+		m_ContentVertScrollBar.setValue(topLineNo);
+		m_ContentHorzScrollBar.setValue(horzOffset);
+//		m_View.SetSelectedLine(lineNo);
+		
+		updateUI();
 	}
 
 	protected void Init() {

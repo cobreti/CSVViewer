@@ -2,17 +2,22 @@ package org;
 
 public class ElementPos {
 
-	public ElementPos(Document.Iterator pos, int start, int length) {
-		m_linePos = pos;
+	public ElementPos(int lineNo, int start, int length) {
+		m_lineNo = lineNo;
 		m_start = start;
 		m_length = length;
 	}
 	
-	public Document.Iterator getLinePos()		{ return m_linePos; }
 	public int getStart()						{ return m_start; }
-	public int getLength()						{ return m_length; }
+	public void setStart(int pos)				{ m_start = pos; }
 	
-	private Document.Iterator		m_linePos;
+	public int getLength()						{ return m_length; }
+	public void setLength(int len)				{ m_length = len; }
+	
+	public int getLineNo()						{ return m_lineNo; }
+	public void setLineNo(int no)				{ m_lineNo = no; }
+	
+	private int						m_lineNo;
 	private int						m_start;
 	private int						m_length;
 }

@@ -10,7 +10,7 @@ public class DocNavPanel extends JPanel
 							implements AdjustmentListener, ComponentListener {
 
 	public DocNavPanel(DocumentController controller) {
-		m_Controller = controller;
+		m_controller = controller;
 		addComponentListener(this);
 		Init();
 	}
@@ -21,7 +21,7 @@ public class DocNavPanel extends JPanel
 	
 	public void OnDocumentContentChanged() {
 		
-		Document doc = m_Controller.getDocument();
+		Document doc = m_controller.getDocument();
 		int linesCount = doc.getLinesCount();
 		
 		
@@ -34,7 +34,7 @@ public class DocNavPanel extends JPanel
 	
 	public void OnNewDocument()
 	{
-		m_windowSelectionPanel.OnNewDocument(m_Controller.getDocument());
+		m_windowSelectionPanel.OnNewDocument(m_controller.getDocument());
 		
 		OnDocumentContentChanged();
 	}
@@ -48,7 +48,7 @@ public class DocNavPanel extends JPanel
 	
 	public void OnVisibleLinesCountChanged(int visibleLinesCount) {
 		
-		Document doc = m_Controller.getDocument();
+		Document doc = m_controller.getDocument();
 		int linesCount = doc.getLinesCount();
 		m_visibleLinesCount = visibleLinesCount;
 		
@@ -107,7 +107,7 @@ public class DocNavPanel extends JPanel
 		m_ContentVertScrollBar = new JScrollBar(JScrollBar.VERTICAL, 0, 0, 0, 0);
 		m_ContentHorzScrollBar = new JScrollBar(JScrollBar.HORIZONTAL, 0, 0, 0, 0);
 		
-		m_View = new DocViewPanel(m_Controller);
+		m_View = new DocViewPanel(m_controller);
 		m_ContentVertScrollBar.addAdjustmentListener( m_View.new VertScrollbarListener(m_View) );
 		m_ContentHorzScrollBar.addAdjustmentListener( m_View.new HorzScrollbarListener(m_View) );
 		
@@ -117,18 +117,21 @@ public class DocNavPanel extends JPanel
 		m_Content.add( m_View, BorderLayout.CENTER );
 		m_btnBrowseFile = new JButton("...");
 		m_btnBrowseFile.setActionCommand("BrowseFile");
-		m_btnBrowseFile.addActionListener(m_Controller);
+		m_btnBrowseFile.addActionListener(m_controller);
 
 		m_PathPanel = new JPanel();
 		m_PathPanel.setLayout( new BorderLayout() );
 		m_PathPanel.add(m_File, BorderLayout.CENTER);
 		m_PathPanel.add(m_btnBrowseFile, BorderLayout.LINE_END);
 
-		m_windowSelectionPanel = new ContentWindowSelectionPanel(m_Controller);
+		m_windowSelectionPanel = new ContentWindowSelectionPanel(m_controller);
+		
+		m_statusPanel = new DocNavStatusPanel(m_controller);
 		
 		add(m_PathPanel, BorderLayout.PAGE_START);
 		add(m_Content, BorderLayout.CENTER);
 		add(m_windowSelectionPanel, BorderLayout.WEST);
+		add(m_statusPanel, BorderLayout.SOUTH);
 	}
 	
 	private JTextField						m_File;
@@ -138,7 +141,8 @@ public class DocNavPanel extends JPanel
 	private JScrollBar						m_ContentVertScrollBar;
 	private JScrollBar						m_ContentHorzScrollBar;
 	private JButton							m_btnBrowseFile;
+	private DocNavStatusPanel				m_statusPanel;
 	private JPanel							m_PathPanel;
-	private DocumentController 				m_Controller;
+	private DocumentController 				m_controller;
 	private int								m_visibleLinesCount;
 }

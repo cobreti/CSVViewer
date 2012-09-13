@@ -1,8 +1,9 @@
 package org;
 
+import java.awt.Dimension;
+import java.awt.Font;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-
 import javax.swing.*;
 
 public class ContentWindowSelectionPanel extends JPanel {
@@ -51,7 +52,7 @@ public class ContentWindowSelectionPanel extends JPanel {
 	protected void AddButton(int index) {
 		JToggleButton btn = new JToggleButton( Integer.toString(index) );
 		btn.addActionListener(new BtnActionListener(m_controller, index));
-		btn.setSize(16, 16);
+		btn.setFont(m_btnFont);
 		m_btnGroup.add(btn);
 		add(btn);
 		
@@ -61,4 +62,5 @@ public class ContentWindowSelectionPanel extends JPanel {
 	
 	private ButtonGroup			m_btnGroup = new ButtonGroup();
 	private DocumentController	m_controller;
+	private Font				m_btnFont = new Font("arial", Font.PLAIN, 10);
 }

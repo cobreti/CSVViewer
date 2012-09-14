@@ -247,9 +247,7 @@ public class DocViewPanel 	extends JPanel
 
 			displayIterator.gotoNext();
 		}
-		
-		System.out.println("line maximum width : " + (int)displayIterator.getMaxWidth() );
-		
+			
 		m_Controller.OnMaxLineWidthUpdate((int)displayIterator.getMaxWidth());
 	}
 
@@ -280,9 +278,7 @@ public class DocViewPanel 	extends JPanel
 		String						selectedLineText = null;
 		
 		m_selectedLine = -1;
-		
-		System.out.println("");
-		
+				
 		while ( displayIterator.isValid() && selectedLine == -1 )
 		{
 			if ( displayIterator.isPointInLine(e.getPoint()) )

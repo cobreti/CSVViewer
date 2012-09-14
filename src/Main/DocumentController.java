@@ -16,8 +16,15 @@ public class DocumentController {
 		int ret = 0;
 		
 		for (int index = 0; index < str.length(); ++ index) {
-			if ( str.charAt(index) == c )
+			
+			char str_c = str.charAt(index);
+			if ( str_c == c )
 				++ ret;
+			
+			if ( str_c > 127 )
+			{
+				System.out.println("character of value (" + Character.getNumericValue(str_c) + ") found" );
+			}
 		}
 		
 		return ret;
@@ -60,17 +67,19 @@ public class DocumentController {
 		m_Document.OnLineSelected(index, text);
 		m_DocNavPanel.OnLineSelected(index, text);
 		
-		char			sep1 = 0xFE;
-		char			sep2 = ';';
-		int				count1 = CountOccurencesOf(text, sep1);
-		int				count2 = CountOccurencesOf(text, sep2);
-		String[]		split_line = text.split(";");
+		char			sep = 0;
 		
-		if ( count1 > count2 )
-			split_line = text.split(Character.toString(sep1));
-		else
-			split_line = text.split(Character.toString(sep2));
+		for (int i = 0; i < text.length() && sep == 0; ++i) {
+			char c = text.charAt(i);
+			
+			if ( c < 0 || c >= 0xFE )
+				sep = c;
+		}
 		
+		if ( sep == 0 )
+			sep = ';';
+		
+		String[]		split_line = text.split(Character.toString(sep));		
 		String[]		formated_text = new String[split_line.length];
 		
 		for (int i = 0; i < split_line.length; ++i) {

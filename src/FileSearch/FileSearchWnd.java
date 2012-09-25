@@ -22,6 +22,9 @@ public class FileSearchWnd extends JFrame {
 		m_contentPanel = new JPanel();
 		m_contentPanel.setLayout( new BorderLayout() );
 		setContentPane(m_contentPanel);
+		
+		m_controlsPanel = new ControlsPanel(m_controller);
+		m_contentPanel.add( m_controlsPanel, BorderLayout.LINE_START );
 	}
 	
 	public void OnNewDocument() {
@@ -34,4 +37,5 @@ public class FileSearchWnd extends JFrame {
 	private Main.DocumentController			m_docController;
 	private FileSearch.Controller			m_controller;
 	private JPanel							m_contentPanel;
+	private ControlsPanel					m_controlsPanel;
 }

@@ -2,6 +2,7 @@ package Main;
 
 import java.io.*;
 import java.util.zip.GZIPInputStream;
+import java.nio.charset.*;
 
 
 public class FileContent {
@@ -69,9 +70,9 @@ public class FileContent {
 		try {
 			
 			if ( m_file.getName().endsWith(".gz") )
-				reader = new InputStreamReader(new GZIPInputStream(new FileInputStream(m_file)));
+				reader = new InputStreamReader(new GZIPInputStream(new FileInputStream(m_file)),"ISO-8859-1");
 			else
-				reader = new FileReader(m_file);
+				reader = new InputStreamReader( new FileInputStream(m_file), "ISO-8859-1");
 		}
 		catch (Exception ex) {
 		}		

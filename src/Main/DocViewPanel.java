@@ -402,10 +402,10 @@ public class DocViewPanel 	extends JPanel
 	protected DocumentController 	m_Controller;
 	protected int 					m_VisibleLinesCount = 1;
 	protected Document.Iterator		m_topLinePos;
-	protected Font					m_lineFont = new Font("Courier", Font.PLAIN, 12);
-	protected Font					m_selectedLineFont = new Font("Courier", Font.BOLD, 12);
-	protected Font					m_lineNoFont = new Font("Courier", Font.ITALIC, 12);
-	protected Font					m_SelectedLineNoFont = new Font("Courier", Font.BOLD | Font.ITALIC, 12);
+	protected Font					m_lineFont = new Font("Courier new", Font.PLAIN, 12);
+	protected Font					m_selectedLineFont = new Font("Courier new", Font.BOLD, 12);
+	protected Font					m_lineNoFont = new Font("Courier new", Font.ITALIC, 12);
+	protected Font					m_SelectedLineNoFont = new Font("Courier new", Font.BOLD | Font.ITALIC, 12);
 	protected int					m_selectedLine = -1;
 	protected int					m_horzOffset = 0;
 }

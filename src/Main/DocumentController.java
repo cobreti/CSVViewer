@@ -76,7 +76,23 @@ public class DocumentController {
 				sep = c;
 		}
 		
-		if ( sep == 0 )
+		int countMsgFormatSep = 0;
+		int countSemiColonSep = 0;
+		
+		if ( sep != 0 )
+		{
+			for (int i = 0; i < text.length(); ++i) {
+				char c = text.charAt(i);
+				if ( c == sep )
+					++ countMsgFormatSep;
+				if ( c == ';' )
+					++ countSemiColonSep;
+			}
+			
+			if (countSemiColonSep > countMsgFormatSep)
+				sep = ';';
+		}
+		else
 			sep = ';';
 		
 		String[]		split_line = text.split(Character.toString(sep));		
